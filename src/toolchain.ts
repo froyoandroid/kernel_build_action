@@ -52,18 +52,24 @@ export async function downloadAndExtract(
   if (url.endsWith('.zip')) {
     const zipPath = await tc.downloadTool(url, `${outputName}.zip`);
     await tc.extractZip(zipPath, extractDir);
-  } else if (url.endsWith('.tar.gz') || url.endsWith('.tar.xz') || url.endsWith('.tar.bz2')) {
+  } else if (url.endsWith('.tar.gz') || url.endsWith('.tar.xz') || url.endsWith('.tar.bz2') || url.endsWith('.tar.zst')) {
     // Handle tar archives with compression
     let ext: string;
     if (url.endsWith('.tar.gz')) {
       ext = '.tar.gz';
     } else if (url.endsWith('.tar.xz')) {
       ext = '.tar.xz';
-    } else {
+    } else if (url.endsWith('.tar.bz2')) {
       ext = '.tar.bz2';
+    } else {
+      ext = '.tar.zst';
     }
     const tarPath = await tc.downloadTool(url, `${outputName}${ext}`);
-    await tc.extractTar(tarPath, extractDir);
+    if (ext === '.tar.zst') {
+      await exec.exec('tar', ['-xf', tarPath, '-C', extractDir]);
+    } else {
+      await tc.extractTar(tarPath, extractDir);
+    }
   } else if (url.endsWith('.gz')) {
     // Handle gzip compressed single files
     const gzPath = await tc.downloadTool(url, `${outputName}.gz`);
