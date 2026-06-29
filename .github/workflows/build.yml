@@ -21,7 +21,7 @@ jobs:
           arch: arm64
           aosp-gcc: false
           aosp-clang: false
-          other-clang-url: https://github.com/Neutron-Toolchains/clang-build-catalogue/releases/download/17062026/neutron-clang-17062026.tar.zst
+          other-clang-url: https://github.com/msft-mirror-aosp/platform.prebuilts.clang.host.linux-x86/tree/master/clang-r547379
           disable-lto: true
           extra-make-args: '["-s"]'
           anykernel3: true
