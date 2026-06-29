@@ -13,18 +13,15 @@ jobs:
 
     steps:
       - name: Build Kernel
-        uses: dabao1955/kernel_build_action@main
+        uses: froyoandroid/kernel_build_action@main
         with:
-          kernel-url: https://github.com/AcmeUI-Devices/android_kernel_xiaomi_cas
-          kernel-dir: msm-4.19
-          kernel-branch: taffy
-          config: cas_defconfig
+          kernel-url: https://gitlab.com/firenza20/kernel-chopin
+          kernel-branch: refactor
+          config: chopin_defconfig
           arch: arm64
           aosp-gcc: true
-          aosp-clang: true
-          ksu: true
-          ksu-version: main
-          android-version: 12
-          aosp-clang-version: r383902
+          aosp-clang: false
+          android-version: 13
           disable-lto: true
           anykernel3: true
+          anykernel3-url: https://github.com/froyoandroid/AnyKernel3
