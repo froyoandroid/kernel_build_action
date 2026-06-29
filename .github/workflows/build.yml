@@ -21,7 +21,6 @@ jobs:
           arch: arm64
           aosp-gcc: true
           aosp-clang: false
-          android-version: 13
           disable-lto: true
           anykernel3: true
           anykernel3-url: https://github.com/froyoandroid/AnyKernel3
