@@ -123,6 +123,10 @@ export async function setupKernelSU(
 export async function setupBBG(kernelDir: string, configPath: string): Promise<void> {
   core.startGroup('Initializing BBG');
 
+  // Remove existing baseband-guard directory/file/symlink to prevent conflicts with symbolic link creation
+  const bbgSymlink = path.join(kernelDir, 'security', 'baseband-guard');
+  fs.rmSync(bbgSymlink, { recursive: true, force: true });
+
   // Download and run setup script
   const bbgSetupPath = path.join(kernelDir, 'bbg_setup.sh');
   await exec.exec('curl', [
@@ -131,7 +135,7 @@ export async function setupBBG(kernelDir: string, configPath: string): Promise<v
     '-o',
     bbgSetupPath,
   ]);
-  await exec.exec('bash', [bbgSetupPath], { cwd: kernelDir });
+  await exec.exec('bash', ['bbg_setup.sh'], { cwd: kernelDir });
 
   // Modify Kconfig
   const kconfigPath = path.join(kernelDir, 'security', 'Kconfig');
