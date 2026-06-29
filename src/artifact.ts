@@ -9,6 +9,24 @@ export interface ArtifactConfig {
   release: boolean;
 }
 
+function getFilesRecursive(dir: string): string[] {
+  let results: string[] = [];
+  if (!fs.existsSync(dir)) {
+    return results;
+  }
+  const list = fs.readdirSync(dir);
+  for (const file of list) {
+    const filePath = path.join(dir, file);
+    const stat = fs.statSync(filePath);
+    if (stat.isDirectory()) {
+      results = results.concat(getFilesRecursive(filePath));
+    } else {
+      results.push(filePath);
+    }
+  }
+  return results;
+}
+
 /**
  * Upload build artifacts
  */
@@ -32,15 +50,8 @@ export async function uploadArtifacts(config: ArtifactConfig): Promise<void> {
 
   core.startGroup(`Uploading artifact: ${artifactName}`);
 
-  // Get all files in build directory
-  const files: string[] = [];
-  for (const entry of entries) {
-    const fullPath = path.join(config.buildDir, entry);
-    const stat = fs.statSync(fullPath);
-    if (stat.isFile()) {
-      files.push(fullPath);
-    }
-  }
+  // Get all files in build directory recursively
+  const files = getFilesRecursive(config.buildDir);
 
   if (files.length === 0) {
     throw new Error('No files to upload');
@@ -80,17 +91,15 @@ export function getArtifactInfo(buildDir: string): { name: string; size: number 
   }
 
   const info: { name: string; size: number }[] = [];
-  const entries = fs.readdirSync(buildDir);
+  const files = getFilesRecursive(buildDir);
 
-  for (const entry of entries) {
-    const fullPath = path.join(buildDir, entry);
-    const stat = fs.statSync(fullPath);
-    if (stat.isFile()) {
-      info.push({
-        name: entry,
-        size: stat.size,
-      });
-    }
+  for (const file of files) {
+    const stat = fs.statSync(file);
+    const relativeName = path.relative(buildDir, file);
+    info.push({
+      name: relativeName,
+      size: stat.size,
+    });
   }
 
   return info;
