@@ -143,7 +143,7 @@ export async function setupBBG(kernelDir: string, configPath: string): Promise<v
     let content = fs.readFileSync(kconfigPath, 'utf-8');
 
     // Add baseband_guard to LSM default
-    const lsmRegex = /(config LSM[\s\S]*?default[\s\S]*?lockdown)([^,]*)/;
+    const lsmRegex = /(\bconfig LSM\b[\s\S]*?default[\s\S]*?lockdown)([^,]*)/;
     if (lsmRegex.test(content) && !content.includes('baseband_guard')) {
       content = content.replace(lsmRegex, '$1,baseband_guard$2');
       fs.writeFileSync(kconfigPath, content);
