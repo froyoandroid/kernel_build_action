@@ -21,7 +21,7 @@ jobs:
           arch: arm64
           aosp-gcc: false
           aosp-clang: false
-          other-clang-url: https://github.com/msft-mirror-aosp/platform.prebuilts.clang.host.linux-x86/tree/master/clang-r547379
+          other-clang-url: https://github.com/llvm/llvm-project/releases/download/llvmorg-22.1.0/LLVM-22.1.0-Linux-X64.tar.xz
           disable-lto: true
           extra-make-args: '["-s"]'
           anykernel3: true
