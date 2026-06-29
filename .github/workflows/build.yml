@@ -9,7 +9,7 @@ jobs:
       fail-fast: false
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
 
     steps:
       - name: Build Kernel
@@ -19,7 +19,7 @@ jobs:
           kernel-branch: refactor
           config: chopin_defconfig
           arch: arm64
-          aosp-gcc: true
+          aosp-gcc: false
           aosp-clang: false
           disable-lto: true
           anykernel3: true
