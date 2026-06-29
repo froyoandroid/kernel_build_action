@@ -23,5 +23,6 @@ jobs:
           aosp-clang: false
           other-clang-url: https://github.com/Neutron-Toolchains/clang-build-catalogue/releases/download/17062026/neutron-clang-17062026.tar.zst
           disable-lto: true
+          extra-make-args: '["-s"]'
           anykernel3: true
           anykernel3-url: https://github.com/froyoandroid/AnyKernel3
