@@ -92,8 +92,36 @@ export async function downloadAndExtract(
       outStream: fs.createWriteStream(destFilePath),
     });
   } else {
-    // Git clone
-    await exec.exec('git', ['clone', '--depth=1', '-b', branch, '--', url, extractDir]);
+    // Git clone with sparse checkout support if a subdirectory is detected in the URL
+    // e.g. https://github.com/user/repo/tree/branch/subdir
+    let repoUrl = url;
+    let gitBranch = branch;
+    let subDir: string | undefined;
+
+    const githubTreeRegex = /https:\/\/github\.com\/([^/]+)\/([^/]+)\/tree\/([^/]+)\/(.+)/;
+    const match = url.match(githubTreeRegex);
+    if (match) {
+      repoUrl = `https://github.com/${match[1]}/${match[2]}.git`;
+      gitBranch = match[3];
+      subDir = match[4];
+    }
+
+    if (subDir) {
+      await exec.exec('git', [
+        'clone',
+        '--depth=1',
+        '--filter=blob:none',
+        '--sparse',
+        '-b',
+        gitBranch,
+        '--',
+        repoUrl,
+        extractDir,
+      ]);
+      await exec.exec('git', ['sparse-checkout', 'set', subDir], { cwd: extractDir });
+    } else {
+      await exec.exec('git', ['clone', '--depth=1', '-b', gitBranch, '--', repoUrl, extractDir]);
+    }
   }
 }
 
