@@ -65,10 +65,10 @@ export async function downloadAndExtract(
       ext = '.tar.zst';
     }
     const tarPath = await tc.downloadTool(url, `${outputName}${ext}`);
-    if (ext === '.tar.zst') {
-      await exec.exec('tar', ['-xf', tarPath, '-C', extractDir]);
-    } else {
+    if (ext === '.tar.gz') {
       await tc.extractTar(tarPath, extractDir);
+    } else {
+      await exec.exec('tar', ['-xf', tarPath, '-C', extractDir]);
     }
   } else if (url.endsWith('.gz')) {
     // Handle gzip compressed single files
