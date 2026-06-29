@@ -23,6 +23,7 @@ jobs:
           aosp-clang: false
           other-clang-url: https://github.com/llvm/llvm-project/releases/download/llvmorg-22.1.0/LLVM-22.1.0-Linux-X64.tar.xz
           disable-lto: true
+          bbg: true
           extra-make-args: '["-s"]'
           anykernel3: true
           anykernel3-url: https://github.com/froyoandroid/AnyKernel3
